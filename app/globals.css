@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-image: url("/img/bg.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+@layer components {
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.7);
+    border-radius: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(148, 163, 184);
+  }
+
+  .triangle-right {
+    position: absolute;
+    top: 0;
+    right: -20px;
+    border-left: 10px solid rgb(30 41 59);
+    border-bottom: 18px solid transparent;
+  }
+
+  .triangle-left {
+    position: absolute;
+    top: 0;
+    left: -20px;
+    border-right: 10px solid rgb(30 41 59);
+    border-bottom: 18px solid transparent;
+  }
+
+  .load {
+    background: linear-gradient(
+      to right,
+      rgb(59 130 246 / 0.1),
+      rgb(15 23 42),
+      rgb(59 130 246 / 0.1),
+      rgb(15 23 42),
+      rgb(59 130 246 / 0.1),
+      rgb(15 23 42),
+      rgb(59 130 246 / 0.1),
+      rgb(15 23 42)
+    );
+    background-size: 500%;
+    animation: profile 1.5s infinite;
+  }
+  @keyframes profile {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100% 0;
+    }
+  }
+}

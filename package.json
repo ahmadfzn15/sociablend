@@ -1,0 +1,37 @@
+{
+  "name": "nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "crypto-js": "^4.2.0",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
+    "gsap": "^3.12.4",
+    "jsonwebtoken": "^9.0.2",
+    "next": "14.0.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "sharp": "^0.33.1"
+  },
+  "devDependencies": {
+    "@material-tailwind/react": "^2.1.7",
+    "@types/crypto-js": "^4.2.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8",
+    "react-icons": "^4.12.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5"
+  }
+}
