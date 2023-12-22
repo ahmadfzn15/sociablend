@@ -8,5 +8,8 @@ declare namespace NodeJS {
     NEXT_PUBLIC_APP_ID_FIREBASE: string;
     NEXT_PUBLIC_MEASUREMENT_ID_FIREBASE: string;
     NEXT_PUBLIC_SECRET_KEY: string;
+    FIREBASE_PRIVATE_KEY: string;
+    FIREBASE_CLIENT_EMAIL: string;
+    AUTH_API_URL: string;
   }
 }

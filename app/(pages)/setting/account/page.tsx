@@ -1,10 +1,26 @@
 "use client";
 
+import { auth } from "@/utils/firebase-config";
 import { Button, Card, CardBody, IconButton } from "@material-tailwind/react";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { HiChevronLeft, HiPower, HiTrash, HiUser } from "react-icons/hi2";
+import { logout } from "./logout";
 
 export default function Account() {
+  const route = useRouter();
+
+  const handleSignOut = () => {
+    logout()
+      .then((res) => {
+        route.push("/auth/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <Card placeholder="any" className="bg-slate-900/70">
@@ -46,6 +62,7 @@ export default function Account() {
             variant="text"
             fullWidth
             className="p-3 flex items-center gap-3 text-slate-300 capitalize font-medium rounded-none"
+            onClick={handleSignOut}
           >
             <HiPower className="w-5 h-5" />
             <div className="flex flex-col items-start justify-between">

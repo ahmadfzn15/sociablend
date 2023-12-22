@@ -5,4 +5,8 @@ declare namespace Auth {
     password: string;
     passwordConfirm: string;
   }
+  export interface Login {
+    email?: string;
+    password: string;
+  }
 }

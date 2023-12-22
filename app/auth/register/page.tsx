@@ -45,7 +45,7 @@ const Reg1 = () => {
     e.preventDefault();
 
     await RegisterProcess({ data })
-      .then((res) => {
+      .then(() => {
         route.push("/home");
       })
       .catch((err) => {
