@@ -21,11 +21,11 @@ export async function Register({ data }: { data: Auth.Register }) {
     const username = await generateUsername();
     await addDoc(collection(firestore, "users"), {
       uid: user.user.uid,
-      profile_picture: null,
+      photoURL: null,
       username: username,
-      name: null,
+      displayName: null,
       email: data.email,
-      telephone_number: null,
+      phoneNumber: null,
       bio: null,
       gender: null,
       born_date: null,

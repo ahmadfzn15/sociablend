@@ -1,39 +1,108 @@
 "use client";
 
+import { PageContext } from "@/app/context";
 import CardChat from "@/components/chats/CardChat";
 import CardChatCommunity from "@/components/chats/CardChatCommunity";
 import SettingChat from "@/components/chats/SettingChat";
+import { firestore } from "@/utils/firebase-config";
 import {
   Button,
-  Chip,
   Dialog,
   DialogBody,
   DialogFooter,
   DialogHeader,
   IconButton,
   Input,
-  List,
-  ListItem,
   Tab,
   TabPanel,
   Tabs,
   TabsBody,
   TabsHeader,
   Tooltip,
-  Typography,
 } from "@material-tailwind/react";
-import React, { useState } from "react";
+import {
+  DocumentData,
+  addDoc,
+  and,
+  arrayUnion,
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useContext } from "react";
 import {
   HiChatBubbleLeftRight,
   HiCog6Tooth,
   HiPlus,
   HiUserGroup,
-  HiXMark,
 } from "react-icons/hi2";
+
+interface Data {
+  id: string;
+  data: DocumentData;
+}
 
 export default function Chats() {
   const [active, setActive] = useState("Chat");
   const [dialogNewChat, setDialogNewChat] = useState(false);
+  const [search, setSearch] = useState<string>("");
+  const [users, setUsers] = useState<Data[]>([]);
+  const { user } = useContext(PageContext);
+  const route = useRouter();
+
+  const searchUser = () => {
+    onSnapshot(
+      query(
+        collection(firestore, "users"),
+        where("username", ">=", search),
+        where("username", "<=", search + "\uf8ff")
+      ),
+      (snapshot) => {
+        setUsers(
+          snapshot.docs
+            .filter((d) => d.data().uid !== user!.uid)
+            .map((d) => ({ id: d.id, data: d.data() }))
+        );
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (search) {
+      searchUser();
+    } else {
+      setUsers([]);
+    }
+  }, [search]);
+
+  const createRoomChat = async (usr: Data) => {
+    const checkRoom = await getDocs(
+      query(
+        collection(firestore, "chatRoom"),
+        where("participants", "==", [user!.id, usr.id])
+      )
+    );
+    if (!checkRoom.empty) {
+      route.push(`/chats/${checkRoom.docs.map((d) => d.id)[0]}/${usr.id}`);
+    } else {
+      await addDoc(collection(firestore, "chatRoom"), {
+        participants: [user!.id, usr.id],
+        active: false,
+        pinned_id: [],
+        deleted_id: [],
+      })
+        .then((res) => {
+          const url = res.id;
+          route.push(`/chats/${url}/${usr.id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <>
@@ -136,48 +205,46 @@ export default function Chats() {
             label="Search"
             color="blue"
             className="text-slate-300"
+            value={search}
+            onChange={(e) => setSearch(e.target?.value)}
           />
         </DialogHeader>
         <DialogBody
           placeholder="any"
           className="h-72 overflow-y-auto flex flex-col gap-1 items-center"
         >
-          <Button
-            color="blue"
-            variant="text"
-            placeholder="any"
-            fullWidth
-            className="p-2 flex items-center justify-between bg-blue-900/20"
-          >
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-full overflow-hidden flex justify-center items-center">
-                  <img src="/img/lusi.jpeg" alt="Photo Profile" />
+          {users &&
+            users.map((d, i) => (
+              <Button
+                key={i}
+                color="blue"
+                variant="text"
+                placeholder="any"
+                fullWidth
+                className="p-2 flex items-center justify-between bg-blue-900/30"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex justify-center items-center">
+                      <img
+                        src={d.data.photoURL ?? "/img/user.png"}
+                        alt={d.data.username}
+                      />
+                    </div>
+                    <div className="w-3 h-3 absolute bottom-0 right-0 rounded-full bg-green-500 ring-1 ring-white"></div>
+                  </div>
+                  <h1>{d.data.username}</h1>
                 </div>
-                <div className="w-3 h-3 absolute bottom-0 right-0 rounded-full bg-green-500 ring-1 ring-white"></div>
-              </div>
-              <h1>Lusi Kuraisin</h1>
-            </div>
-            <Chip color="blue" value="Chat" size="lg" />
-          </Button>
-          <Button
-            color="blue"
-            variant="text"
-            placeholder="any"
-            fullWidth
-            className="p-2 flex items-center justify-between bg-blue-900/20"
-          >
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-full overflow-hidden flex justify-center items-center">
-                  <img src="/img/user.png" alt="Photo Profile" />
-                </div>
-                <div className="w-3 h-3 absolute bottom-0 right-0 rounded-full bg-green-500 ring-1 ring-white"></div>
-              </div>
-              <h1>Ahmad Fauzan</h1>
-            </div>
-            <Chip color="blue" value="Chat" size="lg" />
-          </Button>
+                <Button
+                  placeholder="any"
+                  color="blue"
+                  variant="gradient"
+                  onClick={() => createRoomChat(d)}
+                >
+                  Chat
+                </Button>
+              </Button>
+            ))}
         </DialogBody>
         <DialogFooter placeholder="any" className="flex justify-end">
           <Button

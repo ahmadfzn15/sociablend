@@ -9,11 +9,9 @@ import {
   MenuList,
 } from "@material-tailwind/react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import {
   HiCamera,
-  HiChevronDoubleDown,
-  HiChevronDown,
   HiDocument,
   HiMapPin,
   HiMusicalNote,
@@ -22,6 +20,11 @@ import {
   HiPhoto,
   HiXMark,
 } from "react-icons/hi2";
+import { SendMessage } from "./sendMessage";
+import { PageContext } from "@/app/context";
+import { useParams } from "next/navigation";
+import { ChatContext } from "@/app/context/chat";
+import { DocumentData } from "firebase/firestore";
 
 export default function TypeMessage() {
   const input = useRef<HTMLTextAreaElement>(null);
@@ -29,7 +32,25 @@ export default function TypeMessage() {
   const [textLong, setTextLong] = useState(false);
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<string[] | null>(null);
-  useEffect(() => {}, [message]);
+  const { data } = useContext(ChatContext);
+  const { chat } = useParams();
+
+  const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (message) {
+      SendMessage({
+        data,
+        message,
+        type: "text",
+        idRoom: chat[0],
+      })
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   const changeDocument = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFile = e.target.files;
@@ -79,7 +100,7 @@ export default function TypeMessage() {
             </div>
           </>
         )}
-        <div className="w-full flex rounded-full">
+        <form onSubmit={submitMessage} className="w-full flex rounded-full">
           <div>
             <Menu placement="top-start">
               <MenuHandler>
@@ -136,6 +157,7 @@ export default function TypeMessage() {
           ></textarea>
           <div>
             <Button
+              type="submit"
               placeholder="any"
               color="blue"
               variant="text"
@@ -144,7 +166,7 @@ export default function TypeMessage() {
               <HiPaperAirplane className="w-6 h-6" />
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
