@@ -5,20 +5,20 @@ import React, { useEffect, useState } from "react";
 import { HiChevronRight, HiEye, HiEyeSlash } from "react-icons/hi2";
 import { Register as RegisterProcess } from "./register";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   return (
     <>
-      <div className="bg-slate-800/40 backdrop-blur-md max-w-[30vw] w-full p-8 rounded-xl border border-blue-600/50 text-slate-300 flex flex-col gap-5 items-center">
-        <h1 className="text-2xl font-semibold">Sign up</h1>
-        <Reg1 />
-      </div>
+      <h1 className="text-2xl font-semibold">Sign up</h1>
+      <Reg1 />
     </>
   );
 }
 
 const Reg1 = () => {
   const [pwd, setPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [pwdConfirm, setPwdConfirm] = useState(false);
   const [data, setData] = useState<Auth.Register>({
     email: "",
@@ -43,20 +43,22 @@ const Reg1 = () => {
 
   const registerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     await RegisterProcess({ data })
       .then(() => {
         route.push("/home");
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
       });
   };
 
   return (
     <>
-      <form onSubmit={registerSubmit} className="w-full">
-        <div className="w-full flex flex-col space-y-4">
+      <form onSubmit={registerSubmit} className="w-full space-y-2">
+        <div className="w-full flex flex-col space-y-4 mb-7">
           <div className="w-full">
             <Input
               crossOrigin
@@ -128,17 +130,24 @@ const Reg1 = () => {
               </small>
             )}
           </div>
-          <Button
-            placeholder="any"
-            type="submit"
-            color="blue"
-            variant="outlined"
-            // disabled
-            className="flex items-center gap-1 self-end"
-          >
-            Next <HiChevronRight className="w-4 h-4" />
-          </Button>
         </div>
+        <Button
+          placeholder="any"
+          type="submit"
+          color="blue"
+          variant="gradient"
+          fullWidth
+          disabled={loading}
+          className="flex justify-center items-center gap-1"
+        >
+          Sign up
+        </Button>
+        <h1 className="text-xs sm:text-sm font-semibold">
+          Already account?
+          <Link href="/auth/login" className="hover:underline">
+            click here!
+          </Link>
+        </h1>
       </form>
     </>
   );

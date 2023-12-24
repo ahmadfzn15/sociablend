@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-image: url("/img/bg.png");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-}
-
 @layer components {
+  .body {
+    background-image: url("/img/bg.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     height: 12px;
     width: 12px;

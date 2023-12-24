@@ -4,6 +4,7 @@ import { auth } from "@/utils/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Loading from "../(pages)/loading";
 
 export const AuthContext = React.createContext<{
   loading: boolean;
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ loading }}>
-      {loading ? <h1>Loading...</h1> : children}
+      {loading ? <Loading /> : children}
     </AuthContext.Provider>
   );
 };

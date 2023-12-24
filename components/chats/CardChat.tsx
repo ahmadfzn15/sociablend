@@ -54,12 +54,14 @@ interface Data {
   roomID: string;
   userDetail: User;
   lastMessage: Message;
+  messageReaded: number | null;
 }
 
 export default function CardChat() {
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [datas, setDatas] = useState<Data[] | null>(null);
   const [data, setData] = useState<Data[]>();
+  const [messageUnread, setMessageUnread] = useState<number | null>(null);
   const { user } = useContext(PageContext);
 
   useEffect(() => {
@@ -108,10 +110,15 @@ export default function CardChat() {
                 time: moment(d.data().created_at).format("HH.mm"),
               }))[0];
 
+              const messageReaded = !message.empty
+                ? message.docs.filter((d) => !d.data().readed).length
+                : null;
+
               return {
                 roomID,
                 userDetail,
                 lastMessage,
+                messageReaded,
               };
             })
           );
@@ -206,11 +213,13 @@ export default function CardChat() {
                           </small>
                         </div>
                         <ListItemSuffix placeholder="any">
-                          <Chip
-                            value="1"
-                            color="blue"
-                            className="rounded-full"
-                          />
+                          {d.messageReaded && d.messageReaded !== 0 && (
+                            <Chip
+                              value={d.messageReaded}
+                              color="blue"
+                              className="rounded-full"
+                            />
+                          )}
                         </ListItemSuffix>
                       </ListItem>
                     </Link>

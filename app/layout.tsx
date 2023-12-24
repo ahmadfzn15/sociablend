@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="max-h-screen overflow-hidden max-w-screen antialiased blur-[0.4px]">
+        <div className="max-h-screen overflow-hidden max-w-screen bg-slate-900 antialiased blur-[0.4px]">
           {children}
           {modal}
         </div>

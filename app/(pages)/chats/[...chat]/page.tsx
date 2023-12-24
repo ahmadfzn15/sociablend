@@ -8,9 +8,11 @@ import { IconButton } from "@material-tailwind/react";
 import {
   DocumentData,
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import moment from "moment";
@@ -32,18 +34,30 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    const getMessage = onSnapshot(
+    const unsubscribe = onSnapshot(
       query(
         collection(firestore, "message"),
         where("roomID", "==", data!.idRoom),
         orderBy("created_at", "asc")
       ),
-      (snapshot) => {
-        setMessage(snapshot.docs.map((d) => d.data()));
+      async (snapshot) => {
+        const filter = snapshot.docs.filter((d) => !d.data().readed);
+        const updatePromises = filter.map(async (d) => {
+          try {
+            await updateDoc(doc(firestore, "message", d.id), {
+              readed: true,
+            });
+          } catch (error) {
+            console.error("Error updating document:", error);
+          }
+        });
+        await Promise.all(updatePromises);
+        const messages = snapshot.docs.map((d) => d.data());
+        setMessage(messages);
       }
     );
 
-    return () => getMessage();
+    return () => unsubscribe();
   }, []);
 
   const decryptMessage = (text: string) => {

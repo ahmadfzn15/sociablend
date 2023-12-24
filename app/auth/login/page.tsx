@@ -5,19 +5,9 @@ import React, { useState } from "react";
 import { HiArrowRightOnRectangle, HiEye, HiEyeSlash } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { Login as LoginProcess } from "./login";
+import Link from "next/link";
 
 export default function Login() {
-  return (
-    <>
-      <div className="bg-slate-800/70 backdrop-blur-md max-w-[40vw] w-full p-8 rounded-xl border border-blue-600/50 text-slate-300 flex flex-col gap-5 items-center">
-        <h1 className="text-2xl font-semibold">Sign in</h1>
-        <Signin />
-      </div>
-    </>
-  );
-}
-
-const Signin = () => {
   const [pwd, setPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Auth.Login>({
@@ -34,8 +24,6 @@ const Signin = () => {
 
     await LoginProcess({ data })
       .then((res) => {
-        console.log(res);
-        setLoading(false);
         route.push("/home");
       })
       .catch((err) => {
@@ -46,13 +34,15 @@ const Signin = () => {
 
   return (
     <>
-      <form onSubmit={loginSubmit} className="w-full">
-        <div className="w-full flex flex-col space-y-4">
+      <h1 className="text-2xl font-semibold">Sign in</h1>
+      <form onSubmit={loginSubmit} className="w-full space-y-2">
+        <div className="w-full flex flex-col space-y-4 mb-7">
           <div className="w-full">
             <Input
               crossOrigin="true"
               label="email"
               color="blue"
+              variant="standard"
               className="text-slate-300"
               value={data?.email}
               onChange={(e) => setData({ ...data, email: e.target.value })}
@@ -67,6 +57,7 @@ const Signin = () => {
               type={pwd ? "text" : "password"}
               label="Password"
               color="blue"
+              variant="standard"
               className="text-slate-300"
               value={data?.password}
               onChange={(e) => setData({ ...data, password: e.target.value })}
@@ -88,19 +79,25 @@ const Signin = () => {
               • Field last name required
             </small> */}
           </div>
-          <Button
-            placeholder="any"
-            type="submit"
-            color="blue"
-            variant="gradient"
-            fullWidth
-            disabled={loading}
-            className="flex justify-center items-center gap-1"
-          >
-            <HiArrowRightOnRectangle className="w-4 h-4" /> Sign in
-          </Button>
         </div>
+        <Button
+          placeholder="any"
+          type="submit"
+          color="blue"
+          variant="gradient"
+          fullWidth
+          disabled={loading}
+          className="flex justify-center items-center gap-1"
+        >
+          <HiArrowRightOnRectangle className="w-4 h-4" /> Sign in
+        </Button>
+        <h1 className="text-xs sm:text-sm font-semibold">
+          Don&apos;t have an account?{" "}
+          <Link href="/auth/register" className="hover:underline">
+            click here!
+          </Link>
+        </h1>
       </form>
     </>
   );
-};
+}

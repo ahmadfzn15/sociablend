@@ -5,6 +5,7 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Loading from "../(pages)/loading";
 
 export const PageContext = React.createContext<{
   [key: string]: any;
@@ -48,7 +49,7 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <PageContext.Provider value={{ user }}>
-      {loading ? <h1>Loading...</h1> : children}
+      {loading ? <Loading /> : children}
     </PageContext.Provider>
   );
 };

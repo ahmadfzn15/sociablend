@@ -11,7 +11,11 @@ export default function SidebarSetting() {
 
   return (
     <>
-      <div className="w-60 fixed top-0 right-0 h-screen bg-slate-900/60 shadow-lg shadow-blue-700/50 flex flex-col gap-10 items-center px-3 py-5">
+      <div
+        className={`${
+          route === "/setting" ? "flex" : "hidden lg:flex"
+        } max-w-[90%] w-full mx-auto rounded-lg lg:rounded-none lg:max-w-max lg:m-0 lg:w-60 lg:fixed lg:top-0 lg:right-0 lg:h-screen bg-slate-900 lg:shadow-md shadow-blue-700/50 shadow-none drop-shadow-[0_0_5px_rgba(37,99,235,0.5)] flex-col gap-4 lg:gap-10 items-center px-3 py-5`}
+      >
         <Typography
           placeholder="any"
           variant="h3"
