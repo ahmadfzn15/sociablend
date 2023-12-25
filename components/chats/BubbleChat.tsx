@@ -1,5 +1,6 @@
 "use client";
 
+import { firestore } from "@/utils/firebase-config";
 import {
   IconButton,
   Menu,
@@ -7,17 +8,28 @@ import {
   MenuItem,
   MenuList,
 } from "@material-tailwind/react";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 import { HiChevronDown } from "react-icons/hi2";
 
 export default function BubbleChat({
   children,
   time = "-",
   right,
+  id,
 }: {
   children: React.ReactNode;
   time?: string;
   right: boolean;
+  id: string;
 }) {
+  const deleteMessage = async () => {
+    await deleteDoc(doc(firestore, "message", id));
+  };
+
+  const copyMessage = () => {
+    navigator.clipboard.writeText(children?.toString()!);
+  };
+
   return (
     <>
       {right ? (
@@ -40,8 +52,12 @@ export default function BubbleChat({
                   placeholder="any"
                   className="bg-slate-900 text-slate-300 border-slate-700 "
                 >
-                  <MenuItem placeholder="any">Delete Message</MenuItem>
-                  <MenuItem placeholder="any">Copy Message</MenuItem>
+                  <MenuItem placeholder="any" onClick={deleteMessage}>
+                    Delete Message
+                  </MenuItem>
+                  <MenuItem placeholder="any" onClick={copyMessage}>
+                    Copy Message
+                  </MenuItem>
                   <MenuItem placeholder="any">Share Message</MenuItem>
                 </MenuList>
               </Menu>
@@ -71,8 +87,12 @@ export default function BubbleChat({
                   placeholder="any"
                   className="bg-slate-900 text-slate-300 border-slate-700 "
                 >
-                  <MenuItem placeholder="any">Delete Message</MenuItem>
-                  <MenuItem placeholder="any">Copy Message</MenuItem>
+                  <MenuItem placeholder="any" onClick={deleteMessage}>
+                    Delete Message
+                  </MenuItem>
+                  <MenuItem placeholder="any" onClick={copyMessage}>
+                    Copy Message
+                  </MenuItem>
                   <MenuItem placeholder="any">Share Message</MenuItem>
                 </MenuList>
               </Menu>

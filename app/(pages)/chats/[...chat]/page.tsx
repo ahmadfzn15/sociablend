@@ -36,7 +36,7 @@ export default function Chat() {
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(
-        collection(firestore, "message"),
+        collection(firestore, "chat"),
         where("roomID", "==", data!.idRoom),
         orderBy("created_at", "asc")
       ),
@@ -44,7 +44,7 @@ export default function Chat() {
         const filter = snapshot.docs.filter((d) => !d.data().readed);
         const updatePromises = filter.map(async (d) => {
           try {
-            await updateDoc(doc(firestore, "message", d.id), {
+            await updateDoc(doc(firestore, "chat", d.id), {
               readed: true,
             });
           } catch (error) {
@@ -52,7 +52,7 @@ export default function Chat() {
           }
         });
         await Promise.all(updatePromises);
-        const messages = snapshot.docs.map((d) => d.data());
+        const messages = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
         setMessage(messages);
       }
     );
@@ -108,6 +108,7 @@ export default function Chat() {
                 key={i}
                 time={moment(d.created_at).format("YYYY-mm-dd")}
                 right={d.sender === data!.user.senderID}
+                id={d.id}
               >
                 <h1>{decryptMessage(d.message)}</h1>
               </BubbleChat>

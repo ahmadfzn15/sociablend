@@ -78,6 +78,17 @@ export default function Chats() {
     }
   }, [search]);
 
+  let timer: any;
+  const handlePress = () => {
+    timer = setTimeout(() => {
+      alert("Heyyyy");
+    }, 1000);
+  };
+
+  const clearPress = () => {
+    clearTimeout(timer);
+  };
+
   const createRoomChat = async (usr: Data) => {
     const checkRoom = await getDocs(
       query(
@@ -91,6 +102,7 @@ export default function Chats() {
       await addDoc(collection(firestore, "chatRoom"), {
         participants: [user!.id, usr.id],
         active: false,
+        reader: [],
         pinned_id: [],
         deleted_id: [],
       })
@@ -179,6 +191,9 @@ export default function Chats() {
             className="rounded-full p-8"
             size="lg"
             onClick={() => setDialogNewChat(!dialogNewChat)}
+            onMouseDown={handlePress}
+            onMouseUp={clearPress}
+            onMouseLeave={clearPress}
           >
             <HiPlus className="w-10 h-10" strokeWidth={1} />
           </IconButton>

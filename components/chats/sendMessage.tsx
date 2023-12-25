@@ -29,9 +29,9 @@ export async function SendMessage({
       receiver: data.user.receiver.id,
       message: messageEncrypt,
       type: type,
-      readed: false,
+      read: false,
       pinned_id: [],
-      deleted_id: [],
+      deleted_id: null,
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
     })

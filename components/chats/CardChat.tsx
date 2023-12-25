@@ -25,13 +25,17 @@ import {
 import LoadCardChat from "../loading/loadCardChat";
 import {
   and,
+  arrayRemove,
+  arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { firestore } from "@/utils/firebase-config";
@@ -93,9 +97,9 @@ export default function CardChat() {
               );
               const message = await getDocs(
                 query(
-                  collection(firestore, "message"),
+                  collection(firestore, "chat"),
                   where("roomID", "==", d.id),
-                  orderBy("updated_at", "desc")
+                  orderBy("created_at", "desc")
                 )
               );
               const lastMessage: Message = message.docs.map((d) => ({
@@ -134,6 +138,76 @@ export default function CardChat() {
   const decryptMessage = (text: string) => {
     const msg = Crypto.decrypt(text);
     return msg;
+  };
+
+  const deleteChatRoom = async (id: string) => {
+    const chat = await getDocs(
+      query(collection(firestore, "chat"), where("roomID", "==", id))
+    );
+    const deleted = chat.docs.map(async (d) => {
+      const dataDelete = d.data().deleted_id;
+      if (dataDelete && dataDelete !== user.id) {
+        await deleteDoc(doc(firestore, "message", d.id));
+      }
+      if (!dataDelete) {
+        await updateDoc(doc(firestore, "message", d.id), {
+          deleted_id: user.id,
+        });
+      }
+    });
+    const deleteRoom = async () => {
+      const chats = await getDoc(doc(firestore, "chatRoom", id));
+      const deleteChat = chats.data()!.deleted_id;
+      if (deleteChat && deleteChat !== user.id) {
+        await deleteDoc(doc(firestore, "chatRoom", id));
+      }
+      if (!deleteChat) {
+        await updateDoc(doc(firestore, "chatRoom", id), {
+          deleted_id: user.id,
+        });
+      }
+    };
+
+    await Promise.all([chat, deleted, deleteRoom]);
+  };
+
+  const clearChatRoom = async (id: string) => {
+    const chat = await getDocs(
+      query(collection(firestore, "chat"), where("roomID", "==", id))
+    );
+    const deleteMessage = chat.docs.map(async (d) => {
+      const dataDelete = d.data().deleted_id;
+      if (dataDelete && dataDelete !== user.id) {
+        await deleteDoc(doc(firestore, "message", d.id));
+      }
+      if (!dataDelete) {
+        await updateDoc(doc(firestore, "message", d.id), {
+          deleted_id: user.id,
+        });
+      }
+    });
+
+    await Promise.all([chat, deleteMessage]);
+  };
+
+  const readChatRoom = async (id: string) => {
+    await updateDoc(doc(firestore, "chatroom", id), {
+      read: false,
+    });
+  };
+
+  const pinChatRoom = async (id: string) => {
+    const res = await getDoc(doc(firestore, "chatRoom", id));
+    const result = res.data()!.result.pinned_id.includes(user.id);
+    if (result) {
+      await updateDoc(doc(firestore, "chatroom", id), {
+        pinned_id: arrayRemove(user.id),
+      });
+    } else {
+      await updateDoc(doc(firestore, "chatroom", id), {
+        pinned_id: arrayUnion(user.id),
+      });
+    }
   };
 
   useEffect(() => {
@@ -213,7 +287,7 @@ export default function CardChat() {
                           </small>
                         </div>
                         <ListItemSuffix placeholder="any">
-                          {d.messageReaded && d.messageReaded !== 0 && (
+                          {(d.messageReaded && d.messageReaded) !== 0 && (
                             <Chip
                               value={d.messageReaded}
                               color="blue"
@@ -241,20 +315,30 @@ export default function CardChat() {
                         <MenuItem
                           placeholder="any"
                           className="flex items-center gap-2"
+                          onClick={() => pinChatRoom(d.roomID)}
                         >
                           Delete Chat
                         </MenuItem>
                         <MenuItem
                           placeholder="any"
                           className="flex items-center gap-2"
+                          onClick={() => deleteChatRoom(d.roomID)}
+                        >
+                          Delete Chat
+                        </MenuItem>
+                        <MenuItem
+                          placeholder="any"
+                          className="flex items-center gap-2"
+                          onClick={() => clearChatRoom(d.roomID)}
                         >
                           Clear Chat
                         </MenuItem>
                         <MenuItem
                           placeholder="any"
                           className="flex items-center gap-2"
+                          onClick={() => readChatRoom(d.roomID)}
                         >
-                          Mark as read
+                          Mark as unread
                         </MenuItem>
                       </MenuList>
                     </Menu>

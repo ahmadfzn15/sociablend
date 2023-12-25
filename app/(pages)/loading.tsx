@@ -1,6 +1,7 @@
 "use client";
 
 import { Spinner } from "@material-tailwind/react";
+import "../globals.css";
 
 export default function Loading() {
   return (

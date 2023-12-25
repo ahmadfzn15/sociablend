@@ -2,9 +2,21 @@
 
 import CardPost from "@/components/home/CardPost";
 import { Button } from "@material-tailwind/react";
+import React from "react";
 import { HiPlus } from "react-icons/hi2";
 
 export default function Home() {
+  let timer: any;
+  const handlePress = () => {
+    timer = setTimeout(() => {
+      alert("Heyyyy");
+    }, 1000);
+  };
+
+  const clearPress = () => {
+    clearTimeout(timer);
+  };
+
   return (
     <>
       <div className="py-0 md:pt-10 lg:px-20 pb-20 flex">
@@ -38,6 +50,9 @@ export default function Home() {
             color="blue-gray"
             variant="gradient"
             className="w-16 md:w-20 h-16 md:h-20 rounded-full flex justify-center items-center p-0"
+            onMouseDown={handlePress}
+            onMouseUp={clearPress}
+            onMouseLeave={clearPress}
           >
             <HiPlus className="w-12 h-12" />
           </Button>
