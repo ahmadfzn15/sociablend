@@ -10,8 +10,3 @@ export default function RootLayout({
 }) {
   return <UserProvider>{children}</UserProvider>;
 }
-
-
-
-
-

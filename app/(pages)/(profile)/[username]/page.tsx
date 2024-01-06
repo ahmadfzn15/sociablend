@@ -10,7 +10,7 @@ export default function Username() {
 
   return (
     <>
-      <h1 className="text-center text-slate-300">Hello from {username}</h1>
+      <div className=""></div>
     </>
   );
 }

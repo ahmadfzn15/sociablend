@@ -56,7 +56,7 @@ export default function NavbarProfile() {
             {search ? (
               <>
                 <Input
-                  crossOrigin
+                  crossOrigin="true"
                   label="Search"
                   color="blue"
                   className="pr-10 text-slate-300"

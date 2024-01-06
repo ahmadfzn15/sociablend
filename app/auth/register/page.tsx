@@ -61,7 +61,7 @@ const Reg1 = () => {
         <div className="w-full flex flex-col space-y-4 mb-7">
           <div className="w-full">
             <Input
-              crossOrigin
+              crossOrigin="true"
               label="email"
               color="blue"
               className="text-slate-300"
@@ -74,7 +74,7 @@ const Reg1 = () => {
           </div>
           <div className="w-full">
             <Input
-              crossOrigin
+              crossOrigin="true"
               type={pwd ? "text" : "password"}
               label="Password"
               color="blue"
@@ -101,7 +101,7 @@ const Reg1 = () => {
           </div>
           <div className="w-full">
             <Input
-              crossOrigin
+              crossOrigin="true"
               type={pwdConfirm ? "text" : "password"}
               label="Confirm Password"
               color="blue"
@@ -158,7 +158,7 @@ const Reg2 = () => {
     <div className="w-full flex flex-col space-y-4">
       <div className="w-full">
         <Input
-          crossOrigin
+          crossOrigin="true"
           label="First Name"
           color="blue"
           className="text-slate-300"
@@ -169,7 +169,7 @@ const Reg2 = () => {
       </div>
       <div className="w-full">
         <Input
-          crossOrigin
+          crossOrigin="true"
           label="Last Name"
           color="blue"
           className="text-slate-300"
@@ -180,7 +180,7 @@ const Reg2 = () => {
       </div>
       <div className="w-full">
         <Input
-          crossOrigin
+          crossOrigin="true"
           type="date"
           label="Birth"
           color="blue"

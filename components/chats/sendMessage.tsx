@@ -1,7 +1,6 @@
 import { Crypto } from "@/utils/crypto";
 import { firestore } from "@/utils/firebase-config";
 import {
-  DocumentData,
   addDoc,
   collection,
   doc,
@@ -23,7 +22,7 @@ export async function SendMessage({
 }) {
   try {
     const messageEncrypt = Crypto.encrypt(message);
-    addDoc(collection(firestore, "message"), {
+    addDoc(collection(firestore, "chat"), {
       roomID: idRoom,
       sender: data.user.senderID,
       receiver: data.user.receiver.id,

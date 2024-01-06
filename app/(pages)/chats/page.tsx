@@ -215,7 +215,7 @@ export default function Chats() {
         >
           <h1>Search Your Friend</h1>
           <Input
-            crossOrigin
+            crossOrigin="true"
             type="search"
             label="Search"
             color="blue"

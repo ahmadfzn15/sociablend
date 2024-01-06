@@ -230,7 +230,7 @@ export default function CardChat() {
         >
           <div>
             <Input
-              crossOrigin
+              crossOrigin="true"
               color="blue"
               label="Search"
               className="text-slate-300"
@@ -280,10 +280,11 @@ export default function CardChat() {
                             {d.userDetail.username}
                           </Typography>
                           <small className="text-slate-300">
-                            {decryptMessage(d.lastMessage.message)}
+                            {d.lastMessage &&
+                              decryptMessage(d.lastMessage.message)}
                           </small>
                           <small className="text-slate-300 text-xs">
-                            {d.lastMessage.time}
+                            {d.lastMessage?.time}
                           </small>
                         </div>
                         <ListItemSuffix placeholder="any">
